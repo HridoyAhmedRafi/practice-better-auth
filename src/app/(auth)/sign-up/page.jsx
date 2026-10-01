@@ -1,6 +1,6 @@
 "use client";
 
-import { signUp } from "@/lib/auth-client";
+import { signIn, signUp } from "@/lib/auth-client";
 import {
   Button,
   Description,
@@ -31,9 +31,15 @@ export default function SignUpPage() {
       password: data.password,
     });
 
-    if (resData) {
-      router.push("/message");
-    }
+    // if (resData) {
+    //   router.push("/");
+    // }
+  };
+
+  const signUpWithGoogle = async () => {
+    const data = await signIn.social({
+      provider: "google",
+    });
   };
 
   return (
@@ -42,10 +48,6 @@ export default function SignUpPage() {
         className="px-10 py-15 rounded-2xl border border-[#a0a3a37e] flex w-96 flex-col gap-4"
         onSubmit={onSubmit}
       >
-        <h1 className=" text-[#101828] text-1xl font-bold">
-          Please just Sign Up for your Gift
-        </h1>
-
         <TextField
           isRequired
           name="name"
@@ -111,6 +113,7 @@ export default function SignUpPage() {
             Reset
           </Button>
         </div>
+        <Button onClick={signUpWithGoogle}>Sign Up with google</Button>
       </Form>
     </div>
   );

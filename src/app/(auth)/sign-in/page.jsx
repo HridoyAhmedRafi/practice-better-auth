@@ -26,10 +26,14 @@ export default function SignInPage() {
     const { data: resData, error } = signIn.email({
       email: data.email,
       password: data.password,
-      callbackURL: "/message",
+      callbackURL: "/",
     });
+  };
 
-    console.log("after sbumit form", data, error);
+  const signInWithGoogle = async () => {
+    const data = await signIn.social({
+      provider: "google",
+    });
   };
 
   return (
@@ -91,6 +95,7 @@ export default function SignInPage() {
             Reset
           </Button>
         </div>
+        <Button onClick={signInWithGoogle}>Sign In with google</Button>
       </Form>
     </div>
   );
