@@ -1,8 +1,24 @@
 "use client";
 import { useState } from "react";
 import { Link, Button } from "@heroui/react";
+import { signOut, useSession } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: session, isPending } = useSession();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/sign-in"); // redirect to login page
+        },
+      },
+    });
+  };
+
   const links = (
     <>
       <li>
@@ -13,29 +29,38 @@ export default function Navbar() {
           Dashboard
         </Link>
       </li>
-      <li>
-        <Link href="#">Profile</Link>
-      </li>
+      {session?.user && (
+        <li>
+          <Link href="/profile">Profile</Link>
+        </li>
+      )}
     </>
   );
 
   const authLinks = (
     <>
-      <Link
-        className="bg-blue-500 py-1 px-5 text-white rounded-full"
-        href="sign-in"
-      >
-        Login
-      </Link>
-      <Link
-        className="bg-fuchsia-500 py-1 px-5 text-white rounded-full"
-        href="/sign-up"
-      >
-        Sign Up
-      </Link>
+      {session?.user ? (
+        <>
+          <Button onClick={handleSignOut}>Sign Out</Button>
+        </>
+      ) : (
+        <>
+          <Link
+            className="bg-blue-500 py-1 px-5 text-white rounded-full"
+            href="sign-in"
+          >
+            Sign In
+          </Link>
+          <Link
+            className="bg-fuchsia-500 py-1 px-5 text-white rounded-full"
+            href="/sign-up"
+          >
+            Sign Up
+          </Link>
+        </>
+      )}
     </>
   );
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <nav className="sticky top-0 z-40 w-full border-b border-[#ada8a884] bg-background/70 backdrop-blur-lg">
